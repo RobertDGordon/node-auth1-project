@@ -42,6 +42,7 @@ router.post("/login", (req, res) => {
         .first()
         .then(user => {
             if (user && bc.compareSync(password, user.password)) {
+                req.session.loggedIn = true;
                 req.session.username = user.username;
                 res.status(200).json({ message: `Welcome ${user.username}!` });
             } else {
