@@ -1,6 +1,8 @@
 const bc = require("bcryptjs");
 const router = require("express").Router();
 
+const authorization = require('../auth/auth-middleware.js')
+
 const Users = require("../users/users-model.js");
 
 router.get("/secret", (req, res, next) => {
@@ -50,5 +52,15 @@ router.post("/login", (req, res) => {
             res.status(500).json(error);
         });
 });
+
+router.get('/logout', authorization, (req, res, next) => {
+    req.session.destroy((err) => {
+        if (err) {
+            next(err)
+        } else {
+            res.json( { message: 'User successfully logged out'} )
+        }
+    })
+})
 
 module.exports = router;
